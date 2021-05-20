@@ -1,11 +1,25 @@
-abstract class VkEvent{}
+abstract class VkEvent {}
 
-class VkLoadPage extends VkEvent{
+class VkLoadPage extends VkEvent {
   String link;
-  VkLoadPage(String _link){
+
+  VkLoadPage(String _link) {
     link = _link;
   }
-  String getLink()=>link;
+
+  String getLink() => link;
 }
 
-class VkFriendsPage extends VkEvent{}
+class VkFriendsPage extends VkEvent {
+  String link;
+
+  VkLoadPage(String _link) {
+    link = _link;
+  }
+
+  String getLink() => link;
+}
+
+class VkMainPage extends VkEvent{
+
+}

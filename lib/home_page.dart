@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:vk_bloc/bloc/event.dart';
-
+import 'package:vk_bloc/model/user.dart';
+import 'package:vk_bloc/pages/main_page.dart';
 import 'bloc/state.dart';
 import 'main.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,38 +19,13 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+   var link = LinkGet();
     final VkBloc vkBloc = BlocProvider.of<VkBloc>(context);
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
 
     return BlocBuilder<VkBloc, VkState>(builder: (context, state) {
       if (state is VkLoadedState) {
-        return Scaffold(
-            body: Column(children: [
-              SizedBox(
-                height: 60.0,
-              ),
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(75.0),
-                  child: Image.network(
-                    state.loadedUser[0].photo_200,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-              Center(
-                child: Text(
-                  state.loadedUser[0].first_name,
-                  style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Center(
-                child: Text(
-                  state.loadedUser[0].last_name,
-                  style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold),
-                ),
-              )
-            ]));
+        return MainPage(state.loadedUser, link.getLink());
       }
       if (state is VkLoadingState) {
         return Center(child: CircularProgressIndicator());
@@ -67,6 +43,7 @@ class HomePage extends StatelessWidget {
           },
           navigationDelegate: (NavigationRequest request) async {
             if (request.url.startsWith('https://oauth.vk.com/blank.html')) {
+              link.setLink(request.url);
               vkBloc.add(VkLoadPage(request.url));
             }
             return NavigationDecision.navigate;
