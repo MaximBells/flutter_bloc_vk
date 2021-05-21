@@ -13,7 +13,7 @@ class VkLoadPage extends VkEvent {
 class VkFriendsPage extends VkEvent {
   String link;
 
-  VkLoadPage(String _link) {
+  VkFriendsPage(String _link) {
     link = _link;
   }
 
@@ -21,5 +21,4 @@ class VkFriendsPage extends VkEvent {
 }
 
 class VkMainPage extends VkEvent{
-
 }

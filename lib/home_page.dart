@@ -1,15 +1,19 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:vk_bloc/bloc/event.dart';
-import 'package:vk_bloc/model/user.dart';
-import 'package:vk_bloc/pages/main_page.dart';
-import 'bloc/state.dart';
-import 'main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:vk_bloc/bloc/vk_bloc.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vk_bloc/bloc/event.dart';
+import 'package:vk_bloc/bloc/vk_bloc.dart';
+import 'bloc/state.dart';
+
+import 'package:vk_bloc/model/user.dart';
+import 'package:vk_bloc/pages/friends_page.dart';
+import 'package:vk_bloc/pages/main_page.dart';
+import 'package:vk_bloc/pages/profile.dart';
+
 
 class HomePage extends StatelessWidget {
   final Completer<WebViewController> _controller =
@@ -19,13 +23,21 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   var link = LinkGet();
+    var link = LinkGet();
+    List<dynamic> loadedUser;
     final VkBloc vkBloc = BlocProvider.of<VkBloc>(context);
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
 
     return BlocBuilder<VkBloc, VkState>(builder: (context, state) {
       if (state is VkLoadedState) {
+        loadedUser = state.loadedUser;
         return MainPage(state.loadedUser, link.getLink());
+      }
+      if (state is VkLoadedMainPageState) {
+        return Profile(loadedUser, link.getLink());
+      }
+      if (state is VkLoadedFriendState) {
+        return FriendPage(state.loadedFriend, link.getLink());
       }
       if (state is VkLoadingState) {
         return Center(child: CircularProgressIndicator());

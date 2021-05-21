@@ -41,9 +41,9 @@ class FriendProvider {
         'https://api.vk.com/method/friends.get?user_id=$user_id&access_token=$access_token&v=5.110&fields=nickname,photo_50,photo_200');
     var responseAccount = await http.get(url);
     if (responseAccount.statusCode == 200) {
-      print(jsonDecode(responseAccount.body)['response']);
+      print(jsonDecode(responseAccount.body)['response']['items']);
       final List<dynamic> friendJson =
-          jsonDecode(responseAccount.body)['response'];
+          jsonDecode(responseAccount.body)['response']['items'];
       return friendJson.map((json) => Friend.fromJson(json)).toList();
     } else {
       throw Exception('Error fetching friends');

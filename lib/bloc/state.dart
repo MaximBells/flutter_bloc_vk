@@ -7,8 +7,8 @@ class VkLoadedState extends VkState{
   VkLoadedState({@required this.loadedUser}) : assert (loadedUser != null);
 }
 class VkLoadedMainPageState extends VkState{}
-class VkLoadedFrinedState extends VkState{
+class VkLoadedFriendState extends VkState{
   List<dynamic>loadedFriend;
-  VkLoadedFrinedState({@required this.loadedFriend}) : assert (loadedFriend != null);
+  VkLoadedFriendState({@required this.loadedFriend}) : assert (loadedFriend != null);
 }
 class VkErrorState extends VkState{}

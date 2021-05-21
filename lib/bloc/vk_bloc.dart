@@ -6,6 +6,7 @@ import 'package:vk_bloc/model/user.dart';
 
 class VkBloc extends Bloc<VkEvent, VkState> {
   final UserRepository userRepository;
+  final friendRepository = FriendRepository();
 
   VkBloc({this.userRepository})
       : assert(userRepository != null),
@@ -17,39 +18,24 @@ class VkBloc extends Bloc<VkEvent, VkState> {
       yield VkLoadingState();
       try {
         final List<User> _loadedUserList =
-        await userRepository.getAllUsers(event.getLink());
+            await userRepository.getAllUsers(event.getLink());
         yield VkLoadedState(loadedUser: _loadedUserList);
       } catch (_) {
         yield VkErrorState();
       }
-    }
-  }
-}
-
-class VkPageBloc extends Bloc<VkEvent, VkState> {
-  final FriendRepository friendRepository;
-
-  VkPageBloc({this.friendRepository})
-      : assert(friendRepository != null),
-        super(null);
-
-  @override
-  Stream<VkState> mapEventToState(VkEvent event) async* {
-    if (event is VkFriendsPage) {
-      yield VkLoadingState();
-      try {
-        final List<Friend> _loadedFriendList =
-        await friendRepository.getAllFriend(event.getLink());
-        yield VkLoadedFrinedState(loadedFriend: _loadedFriendList);
-      } catch (_) {
-        yield VkErrorState();
-      }
-    } else if(event is VkMainPage){
-      yield VkLoadingState();
+    } else if (event is VkMainPage) {
       yield VkLoadedMainPageState();
+    } else if (event is VkFriendsPage) {
+      yield VkLoadingState();
+
+        final List<Friend> _loadedFriendList =
+            await friendRepository.getAllFriend(event.getLink());
+        yield VkLoadedFriendState(loadedFriend: _loadedFriendList);
+
     }
   }
 }
+
 //final List<User> _loadedUserList = await userRepository.getAllUsers(userRepository.getLink());
 
 /*@override
