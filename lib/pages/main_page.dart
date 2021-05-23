@@ -44,6 +44,7 @@ class MainPage extends StatelessWidget {
         Center(
             child: Container(
           width: 200.0,
+          // ignore: deprecated_member_use
           child: RaisedButton(
             onPressed: () {
               vkBloc.add(VkMainPage());
@@ -55,8 +56,11 @@ class MainPage extends StatelessWidget {
         Center(
             child: Container(
           width: 200.0,
+          // ignore: deprecated_member_use
           child: RaisedButton(
-            onPressed: () {},
+            onPressed: () {
+              vkBloc.add(VkDialogPage());
+            },
             color: Colors.white54,
             child: Text('Мои сообщения'),
           ),
@@ -64,6 +68,7 @@ class MainPage extends StatelessWidget {
         Center(
             child: Container(
           width: 200.0,
+          // ignore: deprecated_member_use
           child: RaisedButton(
             onPressed: () {
               vkBloc.add(VkFriendsPage(link));

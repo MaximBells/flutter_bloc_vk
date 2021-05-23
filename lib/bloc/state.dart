@@ -11,4 +11,5 @@ class VkLoadedFriendState extends VkState{
   List<dynamic>loadedFriend;
   VkLoadedFriendState({@required this.loadedFriend}) : assert (loadedFriend != null);
 }
+class VkLoadedDialogState extends VkState{}
 class VkErrorState extends VkState{}

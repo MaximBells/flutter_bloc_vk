@@ -27,11 +27,15 @@ class VkBloc extends Bloc<VkEvent, VkState> {
       yield VkLoadedMainPageState();
     } else if (event is VkFriendsPage) {
       yield VkLoadingState();
-
+      try {
         final List<Friend> _loadedFriendList =
             await friendRepository.getAllFriend(event.getLink());
         yield VkLoadedFriendState(loadedFriend: _loadedFriendList);
-
+      } catch (_) {
+        yield VkErrorState();
+      }
+    } else if (event is VkDialogPage) {
+      yield VkLoadedDialogState();
     }
   }
 }

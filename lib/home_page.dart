@@ -13,7 +13,7 @@ import 'package:vk_bloc/model/user.dart';
 import 'package:vk_bloc/pages/friends_page.dart';
 import 'package:vk_bloc/pages/main_page.dart';
 import 'package:vk_bloc/pages/profile.dart';
-
+import 'package:vk_bloc/pages/dialogs_page.dart';
 
 class HomePage extends StatelessWidget {
   final Completer<WebViewController> _controller =
@@ -24,6 +24,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var link = LinkGet();
+    var access_token = AccessToken();
     List<dynamic> loadedUser;
     final VkBloc vkBloc = BlocProvider.of<VkBloc>(context);
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
@@ -39,11 +40,31 @@ class HomePage extends StatelessWidget {
       if (state is VkLoadedFriendState) {
         return FriendPage(state.loadedFriend, link.getLink());
       }
+      if (state is VkLoadedDialogState) {
+        return DialogPage(link.getLink());
+      }
       if (state is VkLoadingState) {
-        return Center(child: CircularProgressIndicator());
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Загрузка...'),
+          ),
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
       }
       if (state is VkErrorState) {
-        return Center(child: Text('error'));
+        return Scaffold(
+          appBar: AppBar(title: Text('Ошибка...'), backgroundColor: Colors.blue,),
+            body: Center(
+                // ignore: deprecated_member_use
+                child: RaisedButton(
+          onPressed: () {
+            vkBloc.add(VkLoadPage(link.getLink()));
+          },
+          child: Text('Error. Press to Reconnect'),
+          color: Colors.red,
+        )));
       }
       return Container(
         padding: EdgeInsets.only(left: 0.0, top: 40.0, right: 0.0, bottom: 0.0),
@@ -56,6 +77,7 @@ class HomePage extends StatelessWidget {
           navigationDelegate: (NavigationRequest request) async {
             if (request.url.startsWith('https://oauth.vk.com/blank.html')) {
               link.setLink(request.url);
+              access_token.setAccessToken(request.url);
               vkBloc.add(VkLoadPage(request.url));
             }
             return NavigationDecision.navigate;

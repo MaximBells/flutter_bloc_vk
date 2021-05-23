@@ -13,6 +13,8 @@ class UserProvider {
     access_token = access_token.split('=')[1];
     user_id = uri.fragment.split('&')[2];
     user_id = user_id.split('=')[1];
+    print(access_token);
+    print(user_id);
     var url = Uri.parse(
         'https://api.vk.com/method/users.get?user_id=$user_id&access_token=$access_token&v=5.52&fields=photo_200');
     var responseAccount = await http.get(url);

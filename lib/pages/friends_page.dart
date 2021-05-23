@@ -17,52 +17,53 @@ class FriendPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final VkBloc vkBloc = BlocProvider.of<VkBloc>(context);
     return Scaffold(
-        bottomNavigationBar: BottomAppBar(
-          child: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              vkBloc.add(VkLoadPage(link));
-            },
-          ),
-        ),
-        appBar: AppBar(
-          title: Text('Друзья'),
-          backgroundColor: Colors.blue,
-        ),
-        body: new ListView.builder(
-          itemCount: loadedFriend.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-                leading: new ClipRRect(
-                  child: new Image.network(
-                    loadedFriend[index].photo_50,
-                    width: 50.0,
-                    height: 50.0,
-                    fit: BoxFit.fill,
-                  ),
-                  borderRadius: BorderRadius.circular(200.0),
-                ),
-                title: new Text(
-                    '${loadedFriend[index].first_name} ${loadedFriend[index].last_name}',
-                    style: new TextStyle(fontSize: 15.0),
-                    overflow: TextOverflow.ellipsis),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                          opaque: false,
-                          pageBuilder: (BuildContext context, _, __) =>
-                              MyOneFriend(loadedFriend[index]),
-                          transitionsBuilder: (___, Animation<double> animation,
-                              ____, Widget child) {
-                            return FadeTransition(
-                              opacity: animation,
-                              child: child,
-                            );
-                          }));
-                });
+      bottomNavigationBar: BottomAppBar(
+        child: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            vkBloc.add(VkLoadPage(link));
           },
-        ));
+        ),
+      ),
+      appBar: AppBar(
+        title: Text('Друзья'),
+        backgroundColor: Colors.blue,
+      ),
+      body: new ListView.builder(
+        itemCount: loadedFriend.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+              leading: new ClipRRect(
+                child: new Image.network(
+                  loadedFriend[index].photo_50,
+                  width: 50.0,
+                  height: 50.0,
+                  fit: BoxFit.fill,
+                ),
+                borderRadius: BorderRadius.circular(200.0),
+              ),
+              title: new Text(
+                  '${loadedFriend[index].first_name} ${loadedFriend[index].last_name}',
+                  style: new TextStyle(fontSize: 15.0),
+                  overflow: TextOverflow.ellipsis),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                        opaque: false,
+                        pageBuilder: (BuildContext context, _, __) =>
+                            MyOneFriend(loadedFriend[index]),
+                        transitionsBuilder: (___, Animation<double> animation,
+                            ____, Widget child) {
+                          return FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          );
+                        }));
+              });
+        },
+      ),
+    );
   }
 }
 
@@ -88,6 +89,7 @@ class MyOneFriend extends StatelessWidget {
       ),
       contentPadding: EdgeInsets.all(70.0),
       actions: [
+        // ignore: deprecated_member_use
         FlatButton(
           onPressed: () {
             Navigator.pop(context);

@@ -20,5 +20,6 @@ class VkFriendsPage extends VkEvent {
   String getLink() => link;
 }
 
-class VkMainPage extends VkEvent{
-}
+class VkMainPage extends VkEvent {}
+
+class VkDialogPage extends VkEvent {}
