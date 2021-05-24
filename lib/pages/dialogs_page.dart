@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vk_bloc/bloc/event.dart';
 import 'package:vk_bloc/bloc/vk_bloc.dart';
+import 'package:bubble/bubble.dart';
 
 class DialogPage extends StatelessWidget {
   String link;
@@ -13,59 +14,141 @@ class DialogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final VkBloc vkBloc = BlocProvider.of<VkBloc>(context);
-    return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: Colors.blue,
-          child: Text('Send'),
-        ),
-        bottomSheet: TextField(
-          obscureText: false,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Input your text here...',
-          ),
-        ),
-        appBar: AppBar(
-          title: Text('Мои сообщения'),
-          backgroundColor: Colors.blue,
-        ),
-        bottomNavigationBar: BottomAppBar(
-          child: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              vkBloc.add(VkLoadPage(link));
-            },
-          ),
-        ),
-        body: new ListView.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Container(
-                margin: EdgeInsets.only(bottom: 15.0, top: 15.0),
-                padding: EdgeInsets.only(
-                    bottom: index == 9 ? 100.0 : 15.0,
-                    top: 20.0,
-                    left: index % 2 == 0 ? 10.0 : 0.0,
-                    right: index % 2 == 1 ? 10.0 : 0.0),
-                alignment: index % 2 == 0
-                    ? Alignment.centerLeft
-                    : Alignment.centerRight,
-                child: Container(
-
-                  padding: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: index % 2 == 0 ? Colors.blueAccent : Colors.lightGreen,
-                    border: Border.all(
-                      style: BorderStyle.values[1],
-                      color: index % 2 == 0 ? Colors.blueAccent : Colors.lightGreen,
-                      width: 1,
+    return WillPopScope(
+        onWillPop: () async {
+          //Замена события
+          vkBloc.add(VkLoadPage(link));
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.blue,
+            flexibleSpace: SafeArea(
+              child: Container(
+                padding: EdgeInsets.only(right: 16),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                      onPressed: () {
+                        vkBloc.add(VkLoadPage(link));
+                      },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: index  == 7 ? Text('ыфдоа ыфлоадыфоаждфлыа лфыжда лфыждалфжыд лаждфы лаждлфы жадлфы аджфыл аждлы фжда лфы') : Text('Message: $index'),
+                    SizedBox(
+                      width: 2,
+                    ),
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          "https://randomuser.me/api/portraits/men/5.jpg"),
+                      maxRadius: 20,
+                    ),
+                    SizedBox(
+                      width: 12,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Kriss Benwat",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
+                          ),
+                          SizedBox(
+                            height: 6,
+                          ),
+                          Text(
+                            "Online",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.settings,
+                      color: Colors.black,
+                    ),
+                  ],
                 ),
-              );
-            }));
+              ),
+            ),
+          ),
+          body: Stack(
+            children: <Widget>[
+              ListView.builder(
+                itemCount: 15,
+                shrinkWrap: true,
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                itemBuilder: (context, index) {
+                  return Bubble(
+                    padding: BubbleEdges.all(10.0),
+                    margin: BubbleEdges.only(
+                        top: 15.0, bottom: index == 14 ? 70.0 : 0.0),
+                    nip:
+                        index % 2 == 0 ? BubbleNip.rightTop : BubbleNip.leftTop,
+                    child: Text('Message $index'),
+                    alignment: index % 2 == 0
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    color: index % 2 == 1
+                        ? Colors.grey.shade200
+                        : Colors.blue[200],
+                  );
+                },
+              ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                  padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                  height: 60,
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                              hintText: "Write message...",
+                              hintStyle: TextStyle(color: Colors.black54),
+                              border: InputBorder.none),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      FloatingActionButton(
+                        onPressed: () {},
+                        child: Icon(
+                          Icons.send,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                        backgroundColor: Colors.blue,
+                        elevation: 0,
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }
